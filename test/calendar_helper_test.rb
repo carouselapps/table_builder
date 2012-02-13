@@ -10,7 +10,7 @@ class CalendarHelperTest < ActionView::TestCase
     @events = [Event.new(3, 'Jimmy Page', Date.civil(2008, 12, 26)),
               Event.new(4, 'Robert Plant', Date.civil(2008, 12, 26))]
   end
-  
+
   def test_calendar_for
     output = calendar_for(@events, :html => { :id => 'id', :style => 'style', :class => 'class'}) do |t|
     end
@@ -25,7 +25,7 @@ class CalendarHelperTest < ActionView::TestCase
       calendar_for('a') {|t| }
     end
   end
-  
+
   def test_calendar_for_with_empty_array
     output = calendar_for([], :year=> 2008, :month => 12) do |c|
       c.day do |day, events|
@@ -43,7 +43,7 @@ class CalendarHelperTest < ActionView::TestCase
       %(</table>)
     assert_dom_equal expected, output
   end
-  
+
   def test_calendar_for_with_events
     output = calendar_for(@events, :year=> 2008, :month => 12) do |c|
       c.day do |day, events|
@@ -62,7 +62,7 @@ class CalendarHelperTest < ActionView::TestCase
       %(</table>)
     assert_dom_equal expected, output
   end
-  
+
   def test_calendar_for_sets_css_classes
     output = calendar_for([], :year=> 2008, :month => 12, :today => Date.civil(2008, 12, 15)) do |c|
       c.day do |day, events|
@@ -131,7 +131,7 @@ class CalendarHelperTest < ActionView::TestCase
         %(</tbody>) <<
       %(</table>)
     assert_dom_equal expected, output
-  end  
+  end
 
   def test_calendar_for_with_row_headers
     output = calendar_for([], :year=> 2008, :month => 12, :row_header => true) do |c|
@@ -154,6 +154,26 @@ class CalendarHelperTest < ActionView::TestCase
       %(</table>)
     assert_dom_equal expected, output
   end
+
+  def test_calendar_for_with_enumerable_object
+    output = calendar_for(Wrapped.new(@events), :year=> 2008, :month => 12) do |c|
+      c.day do |day, events|
+        content = events.collect{|e| e.id}.join
+        concat("(#{day.day})#{content}")
+      end
+    end
+    expected = %(<table>) <<
+      %(<tbody>) <<
+        %(<tr><td class="notmonth weekend">(30)</td><td>(1)</td><td>(2)</td><td>(3)</td><td>(4)</td><td>(5)</td><td class="weekend">(6)</td></tr>) <<
+        %(<tr><td class="weekend">(7)</td><td>(8)</td><td>(9)</td><td>(10)</td><td>(11)</td><td>(12)</td><td class="weekend">(13)</td></tr>) <<
+        %(<tr><td class="weekend">(14)</td><td>(15)</td><td>(16)</td><td>(17)</td><td>(18)</td><td>(19)</td><td class="weekend">(20)</td></tr>) <<
+        %(<tr><td class="weekend">(21)</td><td>(22)</td><td>(23)</td><td>(24)</td><td>(25)</td><td>(26)34</td><td class="weekend">(27)</td></tr>) <<
+        %(<tr><td class="weekend">(28)</td><td>(29)</td><td>(30)</td><td>(31)</td><td class="notmonth">(1)</td><td class="notmonth">(2)</td><td class="notmonth weekend">(3)</td></tr>) <<
+        %(</tbody>) <<
+      %(</table>)
+    assert_dom_equal expected, output
+  end
+
 end
 
 class CalendarHelperTest < ActionView::TestCase
@@ -167,7 +187,7 @@ class CalendarHelperTest < ActionView::TestCase
     calendar = CalendarHelper::Calendar.new(:year=> 2008, :month => 12)
     objects_for_days = {}
     Date.civil(2008, 11, 30).upto(Date.civil(2009, 1, 3)){|day| objects_for_days[day.strftime("%Y-%m-%d")] = [day, []]}
-    objects_for_days['2008-12-26'][1] = @events    
+    objects_for_days['2008-12-26'][1] = @events
     assert_equal objects_for_days, calendar.objects_for_days(@events, :date)
   end
 
@@ -196,16 +216,33 @@ class CalendarHelperTest < ActionView::TestCase
     calendar = CalendarHelper::Calendar.new(:year=> 2008, :month => 12)
     assert_equal Date.civil(2008, 11, 30), calendar.first_day
   end
-  
+
   def test_last_day
     calendar = CalendarHelper::Calendar.new(:year=> 2008, :month => 12)
     assert_equal Date.civil(2009, 1, 3), calendar.last_day
   end
-  
+
   def test_last_day_with_first_day_of_week_set
     calendar = CalendarHelper::Calendar.new(:year=> 2008, :month => 12, :first_day_of_week => 1)
     assert_equal Date.civil(2009, 1, 4), calendar.last_day
-  end  
+  end
 end
 
 class Event < Struct.new(:id, :name, :date); end
+
+class Wrapped
+  include Enumerable
+  attr_accessor :objects
+
+  def initialize(objects)
+    @objects = objects
+  end
+
+  def each
+    @objects.each { |item| yield item }
+  end
+
+  def <=>(other)
+    @objects <=> other
+  end
+end
