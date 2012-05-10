@@ -102,8 +102,12 @@ module TableHelper
     end
 
     def concat(tag)
-      @template.respond_to?(:safe_concat) ? @template.safe_concat(tag) : @template.concat(tag)
-      ""
+      if @template.respond_to?(:safe_concat)
+        @template.safe_concat(tag)
+        ""
+      else
+        @template.concat(tag)
+      end
     end
 
     def content_tag(tag, content, *args)
