@@ -15,7 +15,7 @@ module TableHelper
     include ::ActionView::Helpers::TagHelper
 
     def initialize(objects, template, options)
-      raise ArgumentError, "TableBuilder expects an Enumerable object but found #{objects.inspect}" unless objects.respond_to? :each
+      raise ArgumentError, "TableBuilder expects an Enumerable object but found #{objects.inspect}" if objects.is_a?(String) or not objects.respond_to?(:each)
       @objects, @template, @options = objects, template, options
     end
 
