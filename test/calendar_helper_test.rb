@@ -64,7 +64,7 @@ class CalendarHelperTest < ActionView::TestCase
   end
 
   def test_calendar_for_sets_css_classes
-    output = calendar_for([], :year=> 2008, :month => 12, :today => Date.civil(2008, 12, 15)) do |c|
+    output = calendar_for([], :year=> 2008, :month => 12, :selected => Date.civil(2008,12,14), :today => Date.civil(2008, 12, 15)) do |c|
       c.day do |day, events|
         concat(events.collect{|e| e.id}.join)
       end
@@ -73,7 +73,7 @@ class CalendarHelperTest < ActionView::TestCase
       %(<tbody>) <<
         %(<tr><td class="notmonth weekend"></td><td></td><td></td><td></td><td></td><td></td><td class="weekend"></td></tr>) <<
         %(<tr><td class="weekend"></td><td></td><td></td><td></td><td></td><td></td><td class="weekend"></td></tr>) <<
-        %(<tr><td class="weekend"></td><td class="today"></td><td class="future"></td><td class="future"></td><td class="future"></td><td class="future"></td><td class="weekend future"></td></tr>) <<
+        %(<tr><td class="selected weekend"></td><td class="today"></td><td class="future"></td><td class="future"></td><td class="future"></td><td class="future"></td><td class="weekend future"></td></tr>) <<
         %(<tr><td class="weekend future"></td><td class="future"></td><td class="future"></td><td class="future"></td><td class="future"></td><td class="future"></td><td class="weekend future"></td></tr>) <<
         %(<tr><td class="weekend future"></td><td class="future"></td><td class="future"></td><td class="future"></td><td class="notmonth future"></td><td class="notmonth future"></td><td class="notmonth weekend future"></td></tr>) <<
         %(</tbody>) <<

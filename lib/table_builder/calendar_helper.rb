@@ -25,6 +25,7 @@ module CalendarHelper
       super(objects, template, options)
       @calendar = calendar.new(options)
       @today = options[:today] || Time.now
+      @selected = options[:selected]
       @row_header = options[:row_header] || false
     end
 
@@ -64,6 +65,7 @@ module CalendarHelper
       options = {}
       css_classes = []
       css_classes << 'today'    if day.strftime("%Y-%m-%d") ==  @today.strftime("%Y-%m-%d")
+      css_classes << 'selected' if @selected && day.strftime("%Y-%m-%d") ==  @selected.strftime("%Y-%m-%d")
       css_classes << 'notmonth' if day.month != @calendar.month
       css_classes << 'weekend'  if day.wday == 0 or day.wday == 6
       css_classes << 'future'   if day > @today.to_date
