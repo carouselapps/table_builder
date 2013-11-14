@@ -33,6 +33,7 @@ module CalendarHelper
       options = options_from_hash(args)
       day_method = options.delete(:day_method) || :date
       id_pattern = options.delete(:id)
+      td_more_options = options.delete(:td_options)
       tbody do
         @calendar.objects_for_days(@objects, day_method).to_a.sort{|a1, a2| a1.first <=> a2.first }.each do |o|
           key, array = o
@@ -46,7 +47,7 @@ module CalendarHelper
             yield(day, nil)
             concat("</td>")
           end
-          concat(tag(:td, td_options(day, id_pattern), true))
+          concat(tag(:td, td_options(day, id_pattern, td_more_options), true))
           yield(day, objects)
           concat('</td>')
           concat('</tr>') if(day.wday ==  @calendar.last_weekday)
@@ -60,8 +61,7 @@ module CalendarHelper
       @calendar.objects_for_days(@objects)
     end
 
-    def td_options(day, id_pattern)
-      options = {}
+    def td_options(day, id_pattern, options = {})
       css_classes = []
       css_classes << 'today'    if day.strftime("%Y-%m-%d") ==  @today.strftime("%Y-%m-%d")
       css_classes << 'notmonth' if day.month != @calendar.month
