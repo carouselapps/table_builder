@@ -61,11 +61,11 @@ module CalendarHelper
       @calendar.objects_for_days(@objects)
     end
 
-    def td_options(day, id_pattern, options = {})
-      css_classes = []
+    def td_options(day, id_pattern, options = Hash.new )
+      css_classes = Array.new
       css_classes << 'today'    if day.strftime("%Y-%m-%d") ==  @today.strftime("%Y-%m-%d")
       css_classes << 'notmonth' if day.month != @calendar.month
-      css_classes << 'weekend'  if day.wday == 0 or day.wday == 6
+      css_classes << 'weekend'  if day.wday == 0 || day.wday == 6
       css_classes << 'future'   if day > @today.to_date
       options[:class] = css_classes.join(' ') unless css_classes.empty?
       unless options[:id]
