@@ -63,7 +63,7 @@ module CalendarHelper
 
     def td_options(day, id_pattern, options = {} )
       css_classes = []
-      css_classes <<  options[:class]   if options[:class]
+      
       css_classes << 'today'            if day.strftime("%Y-%m-%d") ==  @today.strftime("%Y-%m-%d")
       css_classes << 'notmonth'         if day.month != @calendar.month
       css_classes << 'weekend'          if day.wday == 0 || day.wday == 6
