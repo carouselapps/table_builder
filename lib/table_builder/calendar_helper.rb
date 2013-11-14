@@ -63,7 +63,7 @@ module CalendarHelper
 
     def td_options(day, id_pattern, options = {} )
       css_classes = []
-      td_more_options = options
+      td_more_options = {}
       td_more_options[:class] = options[:class] if options[:class]
       css_classes << td_more_options[:class]    if td_more_options[:class]
       css_classes << 'today'                    if day.strftime("%Y-%m-%d") ==  @today.strftime("%Y-%m-%d")
