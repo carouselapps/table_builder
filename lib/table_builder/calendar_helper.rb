@@ -40,7 +40,7 @@ module CalendarHelper
           day, objects = array
           concat(tag(:tr, options, true)) if(day.wday ==  @calendar.first_weekday)
           if @row_header && day.wday ==  @calendar.first_weekday
-            row_header_options = td_options(day, id_pattern)
+            row_header_options = td_options(day, id_pattern, td_more_options)
             row_header_options[:class] ||= ""
             row_header_options[:class] << " row_header"
             concat(tag(:td, row_header_options, true))
@@ -67,7 +67,7 @@ module CalendarHelper
       css_classes << 'notmonth' if day.month != @calendar.month
       css_classes << 'weekend'  if day.wday == 0 || day.wday == 6
       css_classes << 'future'   if day > @today.to_date
-      options[:class] = css_classes.join(' ') unless css_classes.empty?
+      options[:class] = css_classes.join(' ')
       unless options[:id]
         options[:id]    = day.strftime(id_pattern) if id_pattern
       end
