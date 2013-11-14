@@ -64,7 +64,7 @@ module CalendarHelper
     def td_options(day, id_pattern, options = {} )
       css_classes = []
       td_more_options = {}
-      options.keys.each |key| do
+      options.keys.each  do |key|
         td_more_options[key] = options[key]
       end
       td_more_options[:class] = options[:class] if options[:class]
