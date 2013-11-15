@@ -74,9 +74,7 @@ module CalendarHelper
       css_classes << 'weekend'                  if day.wday == 0 || day.wday == 6
       css_classes << 'future'                   if day > @today.to_date
       td_more_options[:class] = css_classes.join(' ') unless css_classes.empty?
-      unless options[:id]
-        td_more_options[:id]    = day.strftime(id_pattern) if id_pattern
-      end
+      td_more_options[:id]    = day.strftime(id_pattern) if id_pattern
       td_more_options
     end
 
