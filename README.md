@@ -145,7 +145,7 @@ If you want to add id's to your td tag you can pass a pattern:
 To add other html attributes to your td tag such as classes or data-link you have to do this way:
 This works with any custom attribute for td tags.
 
-    <%= t.day(:td_options=> {:data_link => 'MyPath', :class => 'MyClass'})
+    <%= t.day(:td_options=> {:"data-link" => 'MyPath', :class => 'MyClass'})
 
 To have a header at the begining of each row:
 
