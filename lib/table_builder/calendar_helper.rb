@@ -128,9 +128,11 @@ module CalendarHelper
         @objects_for_days = {}
         days.each{|day| @objects_for_days[day.strftime("%Y-%m-%d")] = [day, []]}
         objects.each do |o|
-          date = o.send(day_method.to_sym).strftime("%Y-%m-%d")
-          if @objects_for_days[date]
-            @objects_for_days[date][1] << o
+          [*day_method].each do |d|
+            date = o.send(d.to_sym).strftime("%Y-%m-%d")
+            if @objects_for_days[date]
+              @objects_for_days[date][1] << o
+            end
           end
         end
       end

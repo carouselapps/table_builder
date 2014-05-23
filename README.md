@@ -19,7 +19,7 @@ Add this to your Gemfile:
 
 or if you prefer to use it straight from GitHub:
 
-    gem "watu_table_builder", :require => "table_builder", :git => "git://github.com/watu/table_builder.git"
+    gem "watu_table_builder", :require => "table_builder", :git => "git://github.com/marclipovsky/table_builder.git"
 
 TableBuilder
 ============
@@ -139,6 +139,10 @@ By default the :date method is called on the objects for sorting.
 To use another method you can pass the :day_method option:
 
     <%= t.day(:day_method => :calendar_date) do |day, tasks| %>
+
+Or you can pass an array of methods to the :day_method option:
+
+    <%= t.day(:day_method => [:start_date, :end_date]) do |day, tasks| %>
 
 If you want to add id's to your td tag you can pass a pattern:
 
