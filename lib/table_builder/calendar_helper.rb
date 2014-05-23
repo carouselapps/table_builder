@@ -33,20 +33,21 @@ module CalendarHelper
       options = options_from_hash(args)
       day_method = options.delete(:day_method) || :date
       id_pattern = options.delete(:id)
+      td_more_options = options.delete(:td_options)
       tbody do
         @calendar.objects_for_days(@objects, day_method).to_a.sort{|a1, a2| a1.first <=> a2.first }.each do |o|
           key, array = o
           day, objects = array
           concat(tag(:tr, options, true)) if(day.wday ==  @calendar.first_weekday)
           if @row_header && day.wday ==  @calendar.first_weekday
-            row_header_options = td_options(day, id_pattern)
+            row_header_options = td_options(day, id_pattern, td_more_options)
             row_header_options[:class] ||= ""
             row_header_options[:class] << " row_header"
             concat(tag(:td, row_header_options, true))
             yield(day, nil)
             concat("</td>")
           end
-          concat(tag(:td, td_options(day, id_pattern), true))
+          concat(tag(:td, td_options(day, id_pattern, td_more_options), true))
           yield(day, objects)
           concat('</td>')
           concat('</tr>') if(day.wday ==  @calendar.last_weekday)
@@ -60,16 +61,21 @@ module CalendarHelper
       @calendar.objects_for_days(@objects)
     end
 
-    def td_options(day, id_pattern)
-      options = {}
+    def td_options(day, id_pattern, options = {} )
       css_classes = []
-      css_classes << 'today'    if day.strftime("%Y-%m-%d") ==  @today.strftime("%Y-%m-%d")
-      css_classes << 'notmonth' if day.month != @calendar.month
-      css_classes << 'weekend'  if day.wday == 0 or day.wday == 6
-      css_classes << 'future'   if day > @today.to_date
-      options[:class] = css_classes.join(' ') unless css_classes.empty?
-      options[:id]    = day.strftime(id_pattern) if id_pattern
-      options
+      td_more_options = {}
+      options.keys.each  do |key|
+        td_more_options[key] = options[key]
+      end
+      td_more_options[:class] = options[:class] if options[:class]
+      css_classes << td_more_options[:class]    if td_more_options[:class]
+      css_classes << 'today'                    if day.strftime("%Y-%m-%d") ==  @today.strftime("%Y-%m-%d")
+      css_classes << 'notmonth'                 if day.month != @calendar.month
+      css_classes << 'weekend'                  if day.wday == 0 || day.wday == 6
+      css_classes << 'future'                   if day > @today.to_date
+      td_more_options[:class] = css_classes.join(' ') unless css_classes.empty?
+      td_more_options[:id]    = day.strftime(id_pattern) if id_pattern
+      td_more_options
     end
 
   end
