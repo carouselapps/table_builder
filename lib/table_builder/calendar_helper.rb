@@ -32,9 +32,10 @@ module CalendarHelper
       raise ArgumentError, "Missing block" unless block_given?
       options = options_from_hash(args)
       day_method = options.delete(:day_method) || :date
+      day_method_args = options.delete(:args) || []
       id_pattern = options.delete(:id)
       tbody do
-        @calendar.objects_for_days(@objects, day_method).to_a.sort{|a1, a2| a1.first <=> a2.first }.each do |o|
+        @calendar.objects_for_days(@objects, day_method, day_method_args).to_a.sort{|a1, a2| a1.first <=> a2.first }.each do |o|
           key, array = o
           day, objects = array
           concat(tag(:tr, options, true)) if(day.wday ==  @calendar.first_weekday)
@@ -123,14 +124,24 @@ module CalendarHelper
       first
     end
 
-    def objects_for_days(objects, day_method)
+    def objects_for_days(objects, day_method, day_method_args)
       unless @objects_for_days
         @objects_for_days = {}
         days.each{|day| @objects_for_days[day.strftime("%Y-%m-%d")] = [day, []]}
         objects.each do |o|
-          date = o.send(day_method.to_sym).strftime("%Y-%m-%d")
-          if @objects_for_days[date]
-            @objects_for_days[date][1] << o
+          date = o.send(day_method.to_sym, *day_method_args)
+          if date.is_a? Range
+            date.each do |d|
+              date_key = d.strftime("%Y-%m-%d")
+              if @objects_for_days[date_key]
+                @objects_for_days[date_key][1] << o
+              end
+            end
+          else
+            date_key = date.strftime("%Y-%m-%d")
+            if @objects_for_days[date_key]
+              @objects_for_days[date_key][1] << o
+            end
           end
         end
       end
@@ -165,5 +176,4 @@ module CalendarHelper
       end
     end
   end
-
 end

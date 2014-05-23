@@ -4,7 +4,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "table_builder/version"
 
 Gem::Specification.new do |s|
-  s.name        = "watu_table_builder"
+  s.name        = "table_builder"
   s.version     = TableBuilder::VERSION
   s.authors     = ["Petrik de Heus", "Andrew C. Greenberg", "Jason Cheong-Kee-You", "J. Pablo Fernández"]
   s.email       = ["pupeno@watuhq.com"]
