@@ -15,7 +15,7 @@ module TableHelper
     include ::ActionView::Helpers::TagHelper
 
     def initialize(objects, template, options)
-      raise ArgumentError, "TableBuilder expects an Enumerable object but found #{objects.inspect}" unless objects.respond_to? :each
+      raise ArgumentError, "TableBuilder expects an Enumerable object but found #{objects.inspect}" if objects.is_a?(String) or not objects.respond_to?(:each)
       @objects, @template, @options = objects, template, options
     end
 
@@ -102,8 +102,12 @@ module TableHelper
     end
 
     def concat(tag)
-      @template.safe_concat(tag)
-      ""
+      if @template.respond_to?(:safe_concat)
+        @template.safe_concat(tag)
+        ""
+      else
+        @template.concat(tag)
+      end
     end
 
     def content_tag(tag, content, *args)
