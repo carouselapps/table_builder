@@ -24,7 +24,7 @@ module CalendarHelper
     def initialize(objects, template, calendar, options)
       super(objects, template, options)
       @calendar = calendar.new(options)
-      @today = options[:today] || Time.now
+      @today = options[:today] || Time.current
       @row_header = options[:row_header] || false
     end
 
@@ -83,8 +83,8 @@ module CalendarHelper
     #   :last => :thirty will show 30 days from :first
     #   :last => :week will show one week
     def initialize(options={})
-      @year               = options[:year] || Time.now.year
-      @month              = options[:month] || Time.now.month
+      @year               = options[:year] || Time.current.year
+      @month              = options[:month] || Time.current.month
       @first_day_of_week  = options[:first_day_of_week] || 0
       @first_weekday      = first_day_of_week(@first_day_of_week)
       @last_weekday       = last_day_of_week(@first_day_of_week)
